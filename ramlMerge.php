@@ -19,12 +19,13 @@ function doInclude ($file, $tabIndex = '') {
 			$spacing = $matches[2];
 			$file = $matches[4];
 			
+			$file_parts = explode(".", $file);
+
 			if (!preg_match("/^((https?:\/\/)|\/)/i", $file)) {
 				$file = BASE_PATH . "/" . $file;
 			}
 			
 			$i = 0;
-			$cap = ": | \n";
 			$subContent = doInclude($file, $spacing . "    ");
 			$subLines = explode("\n", $subContent);
 			
@@ -34,7 +35,11 @@ function doInclude ($file, $tabIndex = '') {
 			
 			if (strpos($subLines[$i], ':') && preg_match("/(:\s*('|\")(.+)('|\"))*/", $subLines[$i])) {
 				$cap = ":\n";
-			}			
+			} else if ($file_parts[1] == "json") {
+				$cap = ": | \n";
+			} else {
+				$cap = ":\n";
+			}
 			
 			return $spacing . $property . $cap . $subContent;
 
